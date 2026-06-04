@@ -1,0 +1,19 @@
+services:
+  postgres_db:
+    image: postgres:16-alpine
+    container_name: dev_postgres_container
+    environment:
+      # 1. Trust authentication locally so you don't need a hardcoded password
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: mediamanager_dev
+    ports:
+      # 2. Avoid local port conflicts by using a non-standard local port
+      - "5433:5432"
+    volumes:
+      # 3. Local named volume (keeps data separated from production tests)
+      - dev_postgres_data:/var/lib/postgresql/data
+    # 4. Changed from 'always' to 'unless-stopped' for dev convenience
+    restart: unless-stopped
+
+volumes:
+  dev_postgres_data:
