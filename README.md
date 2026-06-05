@@ -4,7 +4,7 @@ Media Manager is a unified application designed to catalogue physical and digita
 
 ---
 
-## 🚀 Core Features
+## Core Features
 
 ### 1. Unified Media Cataloging
 * **Any Format Support:** Catalog books, movies, TV series, music, or retro games.
@@ -24,31 +24,31 @@ Media Manager is a unified application designed to catalogue physical and digita
 
 ---
 
-## 📐 Conceptual Architecture
+## Conceptual Architecture
 
 ```mermaid
 graph TD
-    User([User / Client]) -->|Manage Catalog & Upload| UI[Web Interface]
-    UI -->|Metadata & File Tracking| DB[(SQL Database)]
-    UI -->|Archival Upload| Cloud[Cloud Storage - S3/B2]
+    User(["User / Client"]) -->|"Manage Catalog & Upload"| UI["Web Interface"]
+    UI -->|"Metadata & File Tracking"| DB[("SQL Database")]
+    UI -->|"Archival Upload"| Cloud["Cloud Storage - S3/B2"]
 
-    subgraph Home Server (Limited Storage)
-        MS[Media Server - Plex/Jellyfin]
-        Sync[Rotation & Sync Daemon]
-        HD[(Local Hard Drive)]
+    subgraph home_server ["Home Server (Limited Storage)"]
+        MS["Media Server - Plex/Jellyfin"]
+        Sync["Rotation & Sync Daemon"]
+        HD[("Local Hard Drive")]
     end
 
-    Sync -->|Checks Queue / Local Space| DB
-    Sync -->|Pull Down On-Demand| Cloud
-    Sync -->|Manage Files| HD
-    MS -.->|Read Media| HD
+    Sync -->|"Checks Queue / Local Space"| DB
+    Sync -->|"Pull Down On-Demand"| Cloud
+    Sync -->|"Manage Files"| HD
+    MS -.->|"Read Media"| HD
 ```
 
 ---
 
-## 🗃️ Database Mapping
+## Database Mapping
 
-The database schema under [media_manager_schema.sql](file:///home/knplummer/source/repos/media_manager/scripts/sql/media_manager_schema.sql) supports these operations directly:
+The database schema under [media_manager_schema.sql](https://github.com/knplummer/media_manager/blob/main/scripts/sql/media_manager_schema.sql) supports these operations directly:
 
 * **Cataloging Engine:**
   * `LibraryBucket` tracks the collection groupings (e.g., TV Shows, Movie series).
@@ -73,7 +73,7 @@ docker compose -f docker/dev/database/docker-compose.yaml up -d
 ```
 
 ### 2. Initialize the Database Schema
-Apply the SQL schema under [media_manager_schema.sql](file:///home/knplummer/source/repos/media_manager/scripts/sql/media_manager_schema.sql) to set up all tables and constraints:
+Apply the SQL schema under [media_manager_schema.sql](https://github.com/knplummer/media_manager/blob/main/scripts/sql/media_manager_schema.sql) to set up all tables and constraints:
 ```bash
 # Option A: Using a local psql client (port 5433, no password required)
 psql -h localhost -p 5433 -U postgres -d mediamanager_dev -f scripts/sql/media_manager_schema.sql
