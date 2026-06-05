@@ -62,7 +62,7 @@ The database schema under [media_manager_schema.sql](https://github.com/knplumme
 
 ---
 
-## 🛠️ Getting Started & Setup
+## Getting Started & Setup
 
 This repository contains a Docker Compose environment for local PostgreSQL development.
 
