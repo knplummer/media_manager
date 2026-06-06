@@ -1,0 +1,15 @@
+CREATE TABLE Roles (
+    RoleId INTEGER PRIMARY KEY NOT NULL,
+    Name VARCHAR(50) NOT NULL UNIQUE,
+    Description VARCHAR(250) NOT NULL,
+    CreatedBy INTEGER NOT NULL,
+    CreatedDate TIMESTAMP NOT NULL,
+    UpdatedBy INTEGER,
+    UpdatedDate TIMESTAMP
+);
+
+ALTER TABLE Roles
+ADD CONSTRAINT Roles_CreatedBy_Users_UserId FOREIGN KEY (CreatedBy) REFERENCES Users(UserId);
+
+ALTER TABLE Roles
+ADD CONSTRAINT Roles_UpdatedBy_Users_UserId FOREIGN KEY (UpdatedBy) REFERENCES Users(UserId);
