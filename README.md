@@ -69,7 +69,7 @@ This repository contains a Docker Compose environment for local PostgreSQL devel
 ### 1. Start the Local PostgreSQL Database
 Run Docker Compose to spin up the PostgreSQL container (configured to run on port `5433` with the database `mediamanager_dev`):
 ```bash
-docker compose -f docker/dev/database/docker-compose.yaml up -d
+docker compose -f scripts/docker/dev/database/docker-compose.yaml up -d
 ```
 
 ### 2. Initialize the Database Schema
