@@ -48,5 +48,5 @@ Media Manager is a unified cataloging system for physical and digital media. It 
 ## 9. Coding Guidelines
 * Always provide mockable interfaces for external I/O (Clock, FileSystem, Cloud APIs).
 * Maintain strict adherence to C# nullable reference types (`<Nullable>enable</Nullable>`).
-* Keep endpoints lightweight; push complex orchestrations into MediatR/MassTransit handlers.
+* Keep endpoints lightweight; push complex orchestrations into MassTransit handlers.
 * When working with the file system for the Sync Daemon, account for transient networking failures (cloud downloads) with robust retry policies (e.g., Polly).
