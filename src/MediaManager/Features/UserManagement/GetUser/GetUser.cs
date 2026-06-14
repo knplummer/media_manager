@@ -4,7 +4,7 @@ using MediaManager.Infrastructure.Endpoints;
 using MediaManager.Infrastructure.Persistence;
 using MediaManager.Shared.Domain;
 
-namespace MediaManager.Features.Users.GetUser;
+namespace MediaManager.Features.UserManagement.GetUser;
 
 public record GetUserQuery(int UserId);
 

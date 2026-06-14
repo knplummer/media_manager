@@ -5,7 +5,7 @@ using MediaManager.Infrastructure.Persistence;
 using MediaManager.Shared.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace MediaManager.Features.Users.GetUsers;
+namespace MediaManager.Features.UserManagement.GetUsers;
 
 public record GetUsersQuery();
 public record GetUsersResponse(IEnumerable<User> Users);

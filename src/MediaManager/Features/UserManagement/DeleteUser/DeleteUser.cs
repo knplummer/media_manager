@@ -4,7 +4,7 @@ using MediaManager.Infrastructure.Endpoints;
 using MediaManager.Infrastructure.Persistence;
 using MediaManager.Shared.Domain;
 
-namespace MediaManager.Features.Users.DeleteUser;
+namespace MediaManager.Features.UserManagement.DeleteUser;
 
 public record DeleteUserCommand(int UserId);
 public record DeleteUserResponse(bool Success);

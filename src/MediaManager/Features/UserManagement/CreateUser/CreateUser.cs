@@ -6,7 +6,7 @@ using MediaManager.Infrastructure.Persistence;
 using MediaManager.Infrastructure.Validation;
 using MediaManager.Shared.Domain;
 
-namespace MediaManager.Features.Users.CreateUser;
+namespace MediaManager.Features.UserManagement.CreateUserOld;
 
 public record CreateUserCommand(string Username, bool IsActive);
 
