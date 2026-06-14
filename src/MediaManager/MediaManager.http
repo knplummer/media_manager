@@ -1,0 +1,6 @@
+@MediaManager_HostAddress = http://localhost:5223
+
+GET {{MediaManager_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
