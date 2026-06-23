@@ -31,9 +31,16 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.FindAsync(id, cancellationToken);
     }
 
-    public async Task<IEnumerable<User>> ListUsersAsync(int pageNumber, int pageSize, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<User>> ListUsersAsync(int? pageNumber = null, int? pageSize = null, CancellationToken cancellationToken = default)
     {   
-        return await _dbContext.Users.Skip(pageNumber * pageSize).Take(pageSize).ToListAsync(cancellationToken);
+        var query = _dbContext.Users.AsQueryable();
+
+        if (pageNumber.HasValue && pageSize.HasValue)
+        {
+            query = query.Skip(pageNumber.Value * pageSize.Value).Take(pageSize.Value);
+        }
+
+        return await query.ToListAsync(cancellationToken);
     }
 
     public async Task UpdateUserAsync(User user, CancellationToken cancellationToken = default)
