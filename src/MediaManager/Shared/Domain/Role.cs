@@ -15,4 +15,5 @@ public class Role : IAuditableEntity
     public User? Updater { get; set; }
 
     public ICollection<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

@@ -1,4 +1,5 @@
 using FluentValidation;
+using MediaManager.Features.UserManagement.Records.InboundMessages;
 
 namespace MediaManager.Features.UserManagement.Records.Validators;
 

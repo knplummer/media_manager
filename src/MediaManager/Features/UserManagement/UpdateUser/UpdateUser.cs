@@ -6,7 +6,7 @@ using MediaManager.Infrastructure.Persistence;
 using MediaManager.Infrastructure.Validation;
 using MediaManager.Shared.Domain;
 
-namespace MediaManager.Features.UserManagement.UpdateUser;
+namespace MediaManager.Features.UserManagement.UpdateUserOld;
 
 public record UpdateUserCommand(int UserId, string Username, bool IsActive);
 

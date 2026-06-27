@@ -1,0 +1,16 @@
+CREATE TABLE UserRoles (
+    UserRoleId INTEGER PRIMARY KEY NOT NULL,
+    UserId INTEGER NOT NULL,
+    RoleId INTEGER NOT NULL,
+    CreatedBy INTEGER NOT NULL,
+    CreatedDate TIMESTAMP NOT NULL
+);
+
+ALTER TABLE UserRoles
+ADD CONSTRAINT UserRoles_UserId_Users_UserId FOREIGN KEY (UserId) REFERENCES Users(UserId);
+
+ALTER TABLE UserRoles
+ADD CONSTRAINT UserRoles_RoleId_Roles_RoleId FOREIGN KEY (RoleId) REFERENCES Roles(RoleId);
+
+ALTER TABLE UserRoles
+ADD CONSTRAINT UserRoles_CreatedBy_Users_UserId FOREIGN KEY (CreatedBy) REFERENCES Users(UserId);

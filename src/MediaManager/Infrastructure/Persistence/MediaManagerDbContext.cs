@@ -23,6 +23,7 @@ public class MediaManagerDbContext : DbContext
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<UserPermission> UserPermissions => Set<UserPermission>();
+    public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<LibraryBucket> LibraryBuckets => Set<LibraryBucket>();
     public DbSet<LibraryItem> LibraryItems => Set<LibraryItem>();
     public DbSet<LibrarySubItem> LibrarySubItems => Set<LibrarySubItem>();

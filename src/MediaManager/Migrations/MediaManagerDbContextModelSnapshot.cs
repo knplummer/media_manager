@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace MediaManager.Infrastructure.Persistence.Migrations
+namespace MediaManager.Migrations
 {
     [DbContext(typeof(MediaManagerDbContext))]
     partial class MediaManagerDbContextModelSnapshot : ModelSnapshot
@@ -558,6 +558,37 @@ namespace MediaManager.Infrastructure.Persistence.Migrations
                     b.ToTable("UserPermissions", (string)null);
                 });
 
+            modelBuilder.Entity("MediaManager.Shared.Domain.UserRole", b =>
+                {
+                    b.Property<int>("UserRoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserRoleId"));
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserRoleId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoles", (string)null);
+                });
+
             modelBuilder.Entity("MediaManager.Shared.Domain.AccessRequest", b =>
                 {
                     b.HasOne("MediaManager.Shared.Domain.User", "Creator")
@@ -832,6 +863,36 @@ namespace MediaManager.Infrastructure.Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MediaManager.Shared.Domain.UserRole", b =>
+                {
+                    b.HasOne("MediaManager.Shared.Domain.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("UserRoles_CreatedBy_Users_UserId");
+
+                    b.HasOne("MediaManager.Shared.Domain.Role", "Role")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("UserRoles_RoleId_Roles_RoleId");
+
+                    b.HasOne("MediaManager.Shared.Domain.User", "User")
+                        .WithMany("UserRoles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("UserRoles_UserId_Users_UserId");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MediaManager.Shared.Domain.LibraryBucket", b =>
                 {
                     b.Navigation("LibraryItems");
@@ -861,11 +922,15 @@ namespace MediaManager.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("MediaManager.Shared.Domain.Role", b =>
                 {
                     b.Navigation("RolePermissions");
+
+                    b.Navigation("UserRoles");
                 });
 
             modelBuilder.Entity("MediaManager.Shared.Domain.User", b =>
                 {
                     b.Navigation("UserPermissions");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

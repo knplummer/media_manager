@@ -1,9 +1,10 @@
-namespace MediaManager.Features.UserManagement.Records;
+using MediaManager.Features.UserManagement.Records.Abstractions;
 
-public abstract record UserRecord(string Username);
+namespace MediaManager.Features.UserManagement.Records.InboundMessages;
+
 
 public record CreateUser(string Username) : UserRecord(Username);
 public record DeleteUser(string Username) : UserRecord(Username);
 public record GetUser(string Username) : UserRecord(Username);
-public record GetUsers();
+public record GetUsers(int? PageNumber = null, int? PageSize = null);
 public record UpdateUser(string Username, bool IsActive) : UserRecord(Username);

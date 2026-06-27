@@ -9,4 +9,5 @@ public class User
 
     // Navigation properties for relationships
     public ICollection<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
+    public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }
