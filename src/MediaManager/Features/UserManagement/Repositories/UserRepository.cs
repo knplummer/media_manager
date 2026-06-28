@@ -26,9 +26,9 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<User?> GetuserByIdAsync(int id, CancellationToken cancellationToken = default)
+    public async Task<User?> GetUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Users.FindAsync(id, cancellationToken);
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == userName, cancellationToken);
     }
 
     public async Task<IEnumerable<User>> ListUsersAsync(int? pageNumber = null, int? pageSize = null, CancellationToken cancellationToken = default)

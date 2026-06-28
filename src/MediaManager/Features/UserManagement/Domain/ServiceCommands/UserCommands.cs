@@ -1,9 +1,9 @@
-using MediaManager.Features.UserManagement.Records.Abstractions;
+using MediaManager.Features.UserManagement.Domain.Abstractions;
 
-namespace MediaManager.Features.UserManagement.Records.ServiceCommands;
+namespace MediaManager.Features.UserManagement.Domain.ServiceCommands;
 
 
-public record CreateUserCommand(string Username, string) : UserRecord(Username);
+public record CreateUserCommand(string Username) : UserRecord(Username);
 public record DeleteUserCommand(string Username) : UserRecord(Username);
 public record GetUserCommand(string Username) : UserRecord(Username);
 public record GetUsersCommand(int? PageNumber = null, int? PageSize = null);

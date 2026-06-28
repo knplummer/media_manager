@@ -30,7 +30,11 @@ CREATE TABLE Users (
     UserId INTEGER PRIMARY KEY NOT NULL,
     Username VARCHAR(25) NOT NULL UNIQUE,
     IsActive BOOLEAN NOT NULL,
-    LastLogin TIMESTAMP NOT NULL
+    LastLogin TIMESTAMP,
+    CreatedBy INTEGER NOT NULL,
+    CreatedDate TIMESTAMP NOT NULL,
+    UpdatedBy INTEGER,
+    UpdatedDate TIMESTAMP
 );
 
 CREATE TABLE Roles (
@@ -145,6 +149,12 @@ CREATE TABLE LibraryRequests (
 );
 
 -- Add Foreign Key Constraints
+ALTER TABLE Users
+ADD CONSTRAINT Users_CreatedBy_Users_UserId FOREIGN KEY (CreatedBy) REFERENCES Users(UserId);
+
+ALTER TABLE Users
+ADD CONSTRAINT Users_UpdatedBy_Users_UserId FOREIGN KEY (UpdatedBy) REFERENCES Users(UserId);
+
 ALTER TABLE Media
 ADD CONSTRAINT Media_CreatedBy_Users_UserId FOREIGN KEY (CreatedBy) REFERENCES Users(UserId);
 

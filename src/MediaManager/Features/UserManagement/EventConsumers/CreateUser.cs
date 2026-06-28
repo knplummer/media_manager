@@ -1,32 +1,20 @@
-using FluentValidation;
 using MassTransit;
 using MassTransit.Mediator;
 using MediaManager.Infrastructure.Endpoints;
-using MediaManager.Infrastructure.Persistence;
 using MediaManager.Infrastructure.Validation;
 using MediaManager.Shared.Domain;
+using MediaManager.Features.UserManagement.Domain.ServiceCommands;
+using MediaManager.Features.UserManagement.Interfaces;
 
-namespace MediaManager.Features.UserManagement.CreateUserOld;
-
-public record CreateUserCommand(string Username, bool IsActive);
-
-public class CreateUserValidator : AbstractValidator<CreateUserCommand>
-{
-    public CreateUserValidator()
-    {
-        RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("Username cannot be empty.")
-            .MaximumLength(25).WithMessage("Username cannot exceed 25 characters.");
-    }
-}
+namespace MediaManager.Features.UserManagement.EventConsumers;
 
 public class CreateUserConsumer : IConsumer<CreateUserCommand>
 {
-    private readonly MediaManagerDbContext _dbContext;
+    private readonly IUserRepository _userRepository;
 
-    public CreateUserConsumer(MediaManagerDbContext dbContext)
+    public CreateUserConsumer(IUserRepository userRepository)
     {
-        _dbContext = dbContext;
+        _userRepository = userRepository;
     }
 
     public async Task Consume(ConsumeContext<CreateUserCommand> context)
@@ -36,12 +24,11 @@ public class CreateUserConsumer : IConsumer<CreateUserCommand>
         var user = new User
         {
             Username = command.Username,
-            IsActive = command.IsActive,
-            LastLogin = DateTime.UtcNow
+            IsActive = false,
+            LastLogin = null,
         };
 
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync(context.CancellationToken);
+        await _userRepository.AddUserAsync(user, context.CancellationToken);
 
         await context.RespondAsync(user);
     }

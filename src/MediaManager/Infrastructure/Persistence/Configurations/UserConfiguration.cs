@@ -18,6 +18,17 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(e => e.Username).IsUnique();
 
         builder.Property(e => e.IsActive).IsRequired();
-        builder.Property(e => e.LastLogin).IsRequired();
+
+        builder.HasOne(d => d.Creator)
+            .WithMany()
+            .HasForeignKey(d => d.CreatedBy)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("Users_CreatedBy_Users_UserId");
+
+        builder.HasOne(d => d.Updater)
+            .WithMany()
+            .HasForeignKey(d => d.UpdatedBy)
+            .OnDelete(DeleteBehavior.Restrict)
+            .HasConstraintName("Users_UpdatedBy_Users_UserId");
     }
 }
