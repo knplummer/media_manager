@@ -32,7 +32,7 @@ public class UserRepository : IUserRepository
     }
 
     public async Task<IEnumerable<User>> ListUsersAsync(int? pageNumber = null, int? pageSize = null, CancellationToken cancellationToken = default)
-    {   
+    {
         var query = _dbContext.Users.AsQueryable();
 
         if (pageNumber.HasValue && pageSize.HasValue)
