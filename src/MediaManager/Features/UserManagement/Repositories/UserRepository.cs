@@ -1,34 +1,32 @@
 using MediaManager.Shared.Domain.Models;
 using MediaManager.Infrastructure.Persistence;
-using MediaManager.Features.UserManagement.Interfaces;
+using MediaManager.Features.UserManagement.Abstractions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediaManager.Features.UserManagement.Repositories;
 
-public class UserRepository(MediaManagerDbContext dbContext) : IUserRepository
+internal class UserRepository(MediaManagerDbContext dbContext) : IUserRepository
 {
-    private readonly MediaManagerDbContext _dbContext = dbContext;
-
     public async Task AddUserAsync(User user, CancellationToken cancellationToken = default)
     {
-        _dbContext.Users.Add(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        dbContext.Users.Add(user);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task DeleteUserAsync(User user, CancellationToken cancellationToken = default)
     {
-        _dbContext.Users.Remove(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        dbContext.Users.Remove(user);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 
     public async Task<User?> GetUserByUserNameAsync(string userName, CancellationToken cancellationToken = default)
     {
-        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == userName, cancellationToken);
+        return await dbContext.Users.FirstOrDefaultAsync(u => u.Username == userName, cancellationToken);
     }
 
     public async Task<IEnumerable<User>> ListUsersAsync(int? pageNumber = null, int? pageSize = null, CancellationToken cancellationToken = default)
     {
-        var query = _dbContext.Users.AsQueryable();
+        var query = dbContext.Users.AsQueryable();
 
         if (pageNumber.HasValue && pageSize.HasValue)
         {
@@ -40,7 +38,7 @@ public class UserRepository(MediaManagerDbContext dbContext) : IUserRepository
 
     public async Task UpdateUserAsync(User user, CancellationToken cancellationToken = default)
     {
-        _dbContext.Users.Update(user);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        dbContext.Users.Update(user);
+        await dbContext.SaveChangesAsync(cancellationToken);
     }
 }

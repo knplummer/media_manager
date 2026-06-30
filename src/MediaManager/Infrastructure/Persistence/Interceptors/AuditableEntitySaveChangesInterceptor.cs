@@ -1,4 +1,4 @@
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Abstractions.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

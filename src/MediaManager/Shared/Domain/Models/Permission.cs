@@ -1,4 +1,4 @@
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Abstractions.Interfaces;
 
 namespace MediaManager.Shared.Domain.Models;
 

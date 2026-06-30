@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MassTransit;
 using FluentValidation;
 using MediaManager.Infrastructure.Endpoints;
+using MediaManager.Features.UserManagement.Abstractions.Interfaces;
+using MediaManager.Features.UserManagement.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddDbContext<MediaManagerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
