@@ -2,7 +2,7 @@ using MassTransit;
 using MassTransit.Mediator;
 using MediaManager.Infrastructure.Endpoints;
 using MediaManager.Infrastructure.Validation;
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain.Models;
 using MediaManager.Features.UserManagement.Domain.ServiceCommands;
 using MediaManager.Features.UserManagement.Interfaces;
 

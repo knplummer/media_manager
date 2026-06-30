@@ -1,4 +1,4 @@
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain.Models;
 
 namespace MediaManager.Features.UserManagement.Interfaces;
 

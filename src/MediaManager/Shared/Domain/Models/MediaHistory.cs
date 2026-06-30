@@ -1,4 +1,4 @@
-namespace MediaManager.Shared.Domain;
+namespace MediaManager.Shared.Domain.Models;
 
 public class MediaHistory
 {

@@ -1,18 +1,13 @@
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain.Models;
 using MediaManager.Infrastructure.Persistence;
 using MediaManager.Features.UserManagement.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediaManager.Features.UserManagement.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(MediaManagerDbContext dbContext) : IUserRepository
 {
-    private readonly MediaManagerDbContext _dbContext;
-
-    public UserRepository(MediaManagerDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
+    private readonly MediaManagerDbContext _dbContext = dbContext;
 
     public async Task AddUserAsync(User user, CancellationToken cancellationToken = default)
     {

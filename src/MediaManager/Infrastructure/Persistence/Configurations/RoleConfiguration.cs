@@ -1,4 +1,4 @@
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

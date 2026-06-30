@@ -4,7 +4,7 @@ using MassTransit.Mediator;
 using MediaManager.Infrastructure.Endpoints;
 using MediaManager.Infrastructure.Persistence;
 using MediaManager.Infrastructure.Validation;
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain.Models;
 
 namespace MediaManager.Features.UserManagement.UpdateUserOld;
 

@@ -1,4 +1,4 @@
-using MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain.Models;
 using MediaManager.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
 

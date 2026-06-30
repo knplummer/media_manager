@@ -1,4 +1,6 @@
-namespace MediaManager.Shared.Domain;
+using MediaManager.Shared.Domain;
+
+namespace MediaManager.Shared.Domain.Models;
 
 public class Role : IAuditableEntity
 {
