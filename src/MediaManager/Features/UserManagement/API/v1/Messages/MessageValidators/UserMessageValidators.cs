@@ -1,9 +1,9 @@
 using FluentValidation;
-using MediaManager.Features.UserManagement.Abstractions.Models;
+using MediaManager.Features.UserManagement.Abstractions.Interfaces;
 
 namespace MediaManager.Features.UserManagement.API.v1.Messages.MessageValidators;
 
-public abstract class BaseUserValidator<T> : AbstractValidator<T> where T : UserRecord
+public abstract class BaseUserValidator<T> : AbstractValidator<T> where T : IUser
 {
     public abstract void AdditionalRules();
     public BaseUserValidator()

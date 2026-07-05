@@ -1,3 +1,5 @@
+--Rework this into a tree structure for more flexible parent/child item structure
+
 CREATE TABLE LibraryItems (
     LibraryItemId INTEGER PRIMARY KEY NOT NULL,
     LibraryBucketId INTEGER,
