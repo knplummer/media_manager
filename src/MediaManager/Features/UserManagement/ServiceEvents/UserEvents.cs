@@ -1,12 +1,13 @@
+using MediaManager.Shared.Abstractions.Interfaces;
 using MediaManager.Features.UserManagement.Abstractions.Interfaces;
 
 namespace MediaManager.Features.UserManagement.ServiceEvents;
 
-public record CreateUserCommand(string Username, bool IsActive, DateTime? LastLogin) : IUser;
-public record UserCreatedResponse(string Username, bool IsActive, DateTime? LastLogin) : IUser;
-public record DeleteUserCommand(string Username);
-public record UserDeletedResponse(string Username);
-public record GetUserCommand(string Username);
-public record GetUserResponse(string Username, bool IsActive, DateTime? LastLogin) : IUser;
-public record UpdateUserCommand(string Username, bool IsActive, DateTime? LastLogin) : IUser;
-public record UserUpdatedResponse(string Username, bool IsActive, DateTime? LastLogin) : IUser;
+public record CreateUserCommand(Guid Id, string Source, DateTime Timestamp, string Username, bool IsActive, DateTime? LastLogin) : IUser, IEvent;
+public record UserCreatedResponse(Guid Id, string Source, DateTime Timestamp, string Username, bool IsActive, DateTime? LastLogin, bool IsSuccess, Dictionary<int, string> ErrorCodes) : IUser, IEvent, IEventResponse;
+public record DeleteUserCommand(Guid Id, string Source, DateTime Timestamp, string Username) : IEvent;
+public record UserDeletedResponse(Guid Id, string Source, DateTime Timestamp, string Username, bool IsSuccess, Dictionary<int, string> ErrorCodes) : IEvent, IEventResponse;
+public record GetUserCommand(Guid Id, string Source, DateTime Timestamp, string Username) : IEvent;
+public record GetUserResponse(Guid Id, string Source, DateTime Timestamp, string Username, bool IsActive, DateTime? LastLogin, bool IsSuccess, Dictionary<int, string> ErrorCodes) : IUser, IEvent, IEventResponse;
+public record UpdateUserCommand(Guid Id, string Source, DateTime Timestamp, string Username, bool IsActive, DateTime? LastLogin) : IUser, IEvent;
+public record UserUpdatedResponse(Guid Id, string Source, DateTime Timestamp, string Username, bool IsActive, DateTime? LastLogin, bool IsSuccess, Dictionary<int, string> ErrorCodes) : IUser, IEvent, IEventResponse;

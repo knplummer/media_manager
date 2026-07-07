@@ -1,7 +1,6 @@
 using Riok.Mapperly.Abstractions;
 using MediaManager.Shared.Domain.Models;
 using MediaManager.Features.UserManagement.Abstractions.Interfaces;
-using MediaManager.Features.UserManagement.Abstractions.Models;
 
 namespace MediaManager.Features.UserManagement.Mappers;
 
@@ -11,7 +10,7 @@ public partial class UserMapper
     // ServiceCommand → User: ignore entity-only properties (audit, PK, navigation)
     [MapperIgnoreTarget(nameof(User.UserId))]
     [MapperIgnoreTarget(nameof(User.CreatedBy))]
-    [MapperIgnoreTarget(nameof(User.CreatedDate))]
+    [MapperIgnoreTarget(nameof(User.CreatedDate))] 
     [MapperIgnoreTarget(nameof(User.UpdatedBy))]
     [MapperIgnoreTarget(nameof(User.UpdatedDate))]
     [MapperIgnoreTarget(nameof(User.Creator))]
@@ -33,5 +32,5 @@ public partial class UserMapper
     public partial TUser EntityToObject<TUser>(User user) where TUser : IUser;
 
     // Inbound API Message → Command: Both implement IUser and should map 1 to 1
-    public partial TUser MessageToCommand<TUser>(UserRecord user) where TUser : IUser;
+    public partial TUser MessageToCommand<TUser>(IUser user) where TUser : IUser;
 }
