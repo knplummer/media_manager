@@ -5,7 +5,7 @@ using MediaManager.Features.UserManagement.API.v1.Messages;
 using MediaManager.Features.UserManagement.ServiceEvents;
 using MediaManager.Features.UserManagement.Mappers;
 
-namespace MediaManager.Features.UserManagement.API.v1;
+namespace MediaManager.Features.UserManagement.API.v1.Endpoints;
 
 
 //TODO: Figure out idempodent solution look into redis caching transactions (probably a middle ware)

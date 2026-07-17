@@ -1,7 +1,7 @@
 using MassTransit;
 
 using MediaManager.Shared.Abstractions.Interfaces;
-using MediaManager.Shared.Domain.Enums;
+using MediaManager.Shared.Domain.Constants;
 
 using MediaManager.Features.UserManagement.ServiceEvents;
 using MediaManager.Features.UserManagement.Abstractions.Interfaces;
@@ -11,7 +11,7 @@ namespace MediaManager.Features.UserManagement.EventProcessors;
 
 
 //Validate command against database before processing
-public class CreateUserConsumer(IUserRepository userRepository, UserMapper mapper) : IConsumer<CreateUserCommand>, IEventConsumer
+public class CreateUserConsumer(IUserRepository userRepository, UserMapper mapper) : IConsumer<CreateUserCommand>
 {
     public async Task Consume(ConsumeContext<CreateUserCommand> context)
     {
@@ -23,7 +23,7 @@ public class CreateUserConsumer(IUserRepository userRepository, UserMapper mappe
 
             if (!validationResult.Any())
             {
-                await context.RespondAsync(new UserCreatedResponse(Id: command.Id, Source: InternalSources.CommandProcessing.ToString(), Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: validationResult));
+                await context.RespondAsync(new UserCreatedResponse(Id: command.Id, Source: InternalSources.CommandProcessing, Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: validationResult));
                 return;
             }
 
@@ -38,7 +38,7 @@ public class CreateUserConsumer(IUserRepository userRepository, UserMapper mappe
         catch (Exception ex)
         {
             // Handle any exceptions that occur during processing
-            await context.RespondAsync(new UserCreatedResponse(Id: transactionId, Source: InternalSources.ErrorHandling.ToString(), Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: new Dictionary<int, string> { { 0, ex.Message } }));
+            await context.RespondAsync(new UserCreatedResponse(Id: transactionId, Source: InternalSources.ErrorHandling, Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: new Dictionary<int, string> { { 0, ex.Message } }));
         }
     }
 

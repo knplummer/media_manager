@@ -1,4 +1,3 @@
-using MassTransit;
 namespace MediaManager.Shared.Abstractions.Interfaces;
 
 public interface IEventConsumer 
