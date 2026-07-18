@@ -15,7 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<AuditableEntitySaveChangesInterceptor>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
+builder.Services.AddScoped<IUserManagementValidationRepository, UserManagementValidationRepository>();
 builder.Services.AddSingleton<UserMapper>();
 
 builder.Services.AddDbContext<MediaManagerDbContext>(options =>

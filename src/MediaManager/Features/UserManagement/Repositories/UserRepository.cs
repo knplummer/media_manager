@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MediaManager.Features.UserManagement.Repositories;
 
-internal class UserRepository(MediaManagerDbContext dbContext) : IUserManagementRepository
+internal class UserManagementRepository(MediaManagerDbContext dbContext) : IUserManagementRepository
 {
     public async Task AddUserAsync(User user, CancellationToken cancellationToken = default)
     {
