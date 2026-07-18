@@ -6,43 +6,48 @@ namespace MediaManager.Shared.Abstractions.Objects;
 
 public abstract class EventConsumer<TEvent>(ILogger logger) : IEventConsumer, IConsumer<TEvent> where TEvent : class, IEvent
 {
-    private readonly ILogger _logger = logger;
-    private Dictionary<int, string> validationErrors = new Dictionary<int, string>();
+    protected readonly ILogger _logger = logger;
+    protected List<KeyValuePair<int, string>> validationErrors = new List<KeyValuePair<int, string>>();
     
     public abstract Task ValidateTypedEventAsync(TEvent eventCommand);
     
-    public async Task<Dictionary<int, string>> ValidateEventAsync<TEventCommand>(TEventCommand eventCommand) where TEventCommand : IEvent
+    public async Task<Dictionary<int, string>?> ValidateEventAsync<TEventCommand>(TEventCommand eventCommand) where TEventCommand : IEvent
     {
-        this.ValidateBaseEvent(eventCommand);
-        await this.ValidateTypedEventAsync((eventCommand as TEvent)!);
-        return validationErrors;
+        try
+        {
+            this.ValidateBaseEvent(eventCommand);
+            await this.ValidateTypedEventAsync((eventCommand as TEvent)!);
+            if (!validationErrors.Any())
+            {
+                return null;
+            }
+            return validationErrors.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while validating event.");
+            return ErrorResponseCodes.InternalErrorRepsonse;
+        }
     }
 
-    public TEventResponse CreateResponse<TEventResponse>(IEvent @event) where TEventResponse : IEventResponse, new()
-    {
-        throw new NotImplementedException();
-    }
 
     private void ValidateBaseEvent<TEventCommand>(TEventCommand eventCommand) where TEventCommand : IEvent
     {
-        if
-    }
-
-    // MassTransit entry point
-    public async Task Consume(ConsumeContext<TEvent> context)
-    {
-        var errors = await ValidateEventAsync(context.Message);
-        
-        if (errors.Count > 0)
+        if(eventCommand.Id == Guid.Empty)
         {
-            // Depending on architecture, you can throw a custom validation exception here 
-            // so MassTransit routes it to the _error queue, or you can handle it explicitly.
-            throw new Exception("Event validation failed.");
+            validationErrors.Add(ErrorResponseCodes.MissingEventId.ToResponseCode());
         }
 
-        await ProcessEventAsync(context);
+        if(string.IsNullOrWhiteSpace(eventCommand.Source))
+        {
+            validationErrors.Add(ErrorResponseCodes.MissingSource.ToResponseCode());
+        }
+
+        if(eventCommand.Timestamp == default)
+        {
+            validationErrors.Add(ErrorResponseCodes.MissingTimestamp.ToResponseCode());
+        }
     }
 
-    // Abstract method for derived classes to implement their specific consumption logic
-    protected abstract Task ProcessEventAsync(ConsumeContext<TEvent> context);
+    public abstract Task Consume(ConsumeContext<TEvent> context);
 }

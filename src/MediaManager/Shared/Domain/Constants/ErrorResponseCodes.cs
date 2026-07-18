@@ -12,6 +12,8 @@ public static partial class ErrorResponseCodes
     public const int MissingTimestamp = 4;
     #endregion
 
+    public static Dictionary<int, string> InternalErrorRepsonse => new List<KeyValuePair<int, string>> { InternalError.ToResponseCode() }.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
     public static KeyValuePair<int, string> ToResponseCode(this int code)
     {
         var properties = typeof(ErrorResponseCodes).GetProperties(BindingFlags.Public | BindingFlags.Static);

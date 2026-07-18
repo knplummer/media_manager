@@ -2,7 +2,7 @@ using MediaManager.Shared.Domain.Models;
 
 namespace MediaManager.Features.UserManagement.Abstractions.Interfaces;
 
-public interface IUserRepository
+public interface IUserManagementRepository
 {
     Task<User?> GetUserByUserNameAsync(string userName, CancellationToken cancellationToken = default);
     Task AddUserAsync(User user, CancellationToken cancellationToken = default);

@@ -1,7 +1,8 @@
 using MassTransit;
 
-using MediaManager.Shared.Abstractions.Interfaces;
+using MediaManager.ErrorConstants;
 using MediaManager.Shared.Domain.Constants;
+using MediaManager.Shared.Abstractions.Objects;
 
 using MediaManager.Features.UserManagement.ServiceEvents;
 using MediaManager.Features.UserManagement.Abstractions.Interfaces;
@@ -11,17 +12,17 @@ namespace MediaManager.Features.UserManagement.EventProcessors;
 
 
 //Validate command against database before processing
-public class CreateUserConsumer(IUserRepository userRepository, UserMapper mapper) : IConsumer<CreateUserCommand>
+public class CreateUserConsumer(IUserManagementRepository userRepository, IUserManagementValidationRepository validationRepository, UserMapper mapper, ILogger<CreateUserConsumer> logger) : EventConsumer<CreateUserCommand>(logger)
 {
-    public async Task Consume(ConsumeContext<CreateUserCommand> context)
+    public override async Task Consume(ConsumeContext<CreateUserCommand> context)
     {
-        var transactionId = context.Message.Id;
+        var eventId = context.Message.Id;
         try{
             var command = context.Message;
 
-            var validationResult = await ValidateEventAsync(command);
+            var validationResult = await this.ValidateEventAsync(command);
 
-            if (!validationResult.Any())
+            if (validationResult != null)
             {
                 await context.RespondAsync(new UserCreatedResponse(Id: command.Id, Source: InternalSources.CommandProcessing, Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: validationResult));
                 return;
@@ -32,19 +33,21 @@ public class CreateUserConsumer(IUserRepository userRepository, UserMapper mappe
             await userRepository.AddUserAsync(user, context.CancellationToken);
 
             var mappedResponse = mapper.EntityToObject<UserCreatedResponse>(user);
-            var response = mappedResponse with { IsSuccess = true };
+            var response = mappedResponse with { Id = command.Id, IsSuccess = true, Source = InternalSources.CommandProcessing, Timestamp = DateTime.UtcNow, ErrorCodes = null };
             await context.RespondAsync(response);
         }
         catch (Exception ex)
         {
-            // Handle any exceptions that occur during processing
-            await context.RespondAsync(new UserCreatedResponse(Id: transactionId, Source: InternalSources.ErrorHandling, Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: new Dictionary<int, string> { { 0, ex.Message } }));
+            _logger.LogError(ex, "Error occurred while processing CreateUserCommand.");
+            await context.RespondAsync(new UserCreatedResponse(Id: eventId, Source: InternalSources.ErrorHandling, Timestamp: DateTime.UtcNow, Username: string.Empty, IsActive: false, LastLogin: null, IsSuccess: false, ErrorCodes: ErrorResponseCodes.InternalErrorRepsonse));
         }
     }
 
-    public Task<Dictionary<int, string>> ValidateEventAsync<TEvent>(TEvent eventCommand) where TEvent : IEvent
+    public override async Task ValidateTypedEventAsync(CreateUserCommand eventCommand)
     {
-        throw new NotImplementedException();
+        if(await validationRepository.UserExistsAsync(eventCommand.Username))
+        {
+            validationErrors.Add(ErrorResponseCodes.UserAlreadyExists.ToResponseCode());
+        }
     }
-
 }
