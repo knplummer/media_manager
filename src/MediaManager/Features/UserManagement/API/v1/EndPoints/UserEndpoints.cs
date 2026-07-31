@@ -1,4 +1,4 @@
-using MassTransit.Mediator;
+using MassTransit;
 using MediaManager.Infrastructure.Endpoints;
 using MediaManager.Infrastructure.Validation;
 using MediaManager.Features.UserManagement.API.v1.Messages;
@@ -9,13 +9,12 @@ namespace MediaManager.Features.UserManagement.API.v1.Endpoints;
 
 
 //TODO: Figure out idempodent solution look into redis caching transactions (probably a middle ware)
-public class CreateUserEndpoint(UserMapper userMapper) : IEndpoint
+public class CreateUserEndpoint() : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/v1/users", async (CreateUserMessage message, IMediator mediator) =>
+        app.MapPost("/api/v1/users", async (CreateUserMessage message, IRequestClient<CreateUserCommand> client, UserManagementMapper userMapper) =>
         {
-            var client = mediator.CreateRequestClient<CreateUserCommand>();
             var response = await client.GetResponse<UserCreatedResponse>(userMapper.MessageToCommand<CreateUserCommand>(message));
             return Results.Created($"/api/v1/users/{response.Message.Username}", response.Message);
         })
@@ -24,13 +23,12 @@ public class CreateUserEndpoint(UserMapper userMapper) : IEndpoint
     }
 }
 
-public class UpdateUserEndpoint(UserMapper userMapper) : IEndpoint
+public class UpdateUserEndpoint() : IEndpoint
 {   
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/v1/users", async (UpdateUserMessage message, IMediator mediator) =>
+        app.MapPut("/api/v1/users", async (UpdateUserMessage message, IRequestClient<UpdateUserCommand> client, UserManagementMapper userMapper) =>
         {
-            var client = mediator.CreateRequestClient<UpdateUserCommand>();
             var response = await client.GetResponse<UserUpdatedResponse>(userMapper.MessageToCommand<UpdateUserCommand>(message));
             return Results.Ok(response.Message);
         })

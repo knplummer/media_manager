@@ -5,7 +5,7 @@ using MediaManager.Features.UserManagement.Abstractions.Interfaces;
 namespace MediaManager.Features.UserManagement.Mappers;
 
 [Mapper]
-public partial class UserMapper
+public partial class UserManagementMapper
 {
     // ServiceCommand → User: ignore entity-only properties (audit, PK, navigation)
     [MapperIgnoreTarget(nameof(User.UserId))]
@@ -33,4 +33,7 @@ public partial class UserMapper
 
     // Inbound API Message → Command: Both implement IUser and should map 1 to 1
     public partial TUser MessageToCommand<TUser>(IUser user) where TUser : IUser;
+
+    //Can I make a mapper for a response object that auto populates the common response properties like success, message, and status code? I want to avoid having to set those properties in every response object manually.
+
 }

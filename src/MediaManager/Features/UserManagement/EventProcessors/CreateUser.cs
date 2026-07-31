@@ -12,7 +12,7 @@ namespace MediaManager.Features.UserManagement.EventProcessors;
 
 
 //Validate command against database before processing
-public class CreateUserConsumer(IUserManagementRepository userRepository, IUserManagementValidationRepository validationRepository, UserMapper mapper, ILogger<CreateUserConsumer> logger) : EventConsumer<CreateUserCommand>(logger)
+public class CreateUserConsumer(IUserManagementRepository userRepository, IUserManagementValidationRepository validationRepository, UserManagementMapper mapper, ILogger<CreateUserConsumer> logger) : EventConsumer<CreateUserCommand>(logger)
 {
     public override async Task Consume(ConsumeContext<CreateUserCommand> context)
     {

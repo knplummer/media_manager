@@ -11,30 +11,51 @@ using MediaManager.Features.UserManagement.Mappers;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IUserManagementValidationRepository, UserManagementValidationRepository>();
-builder.Services.AddSingleton<UserMapper>();
+builder.Services.AddSingleton<UserManagementMapper>();
 
 builder.Services.AddDbContext<MediaManagerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
-builder.Services.AddMassTransit(cfg => 
+builder.Services.AddMediator(x =>
 {
-    cfg.AddConsumers(typeof(Program).Assembly);
+    x.AddConsumers(typeof(Program).Assembly);
+});
+
+builder.Services.AddMassTransit(x => 
+{
+    x.AddConsumers(typeof(Program).Assembly);
+
+    x.UsingInMemory((context, cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
 });
 
 var app = builder.Build();
+
+// Apply pending migrations on startup in Development
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<MediaManagerDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
