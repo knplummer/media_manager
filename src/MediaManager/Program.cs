@@ -1,49 +1,65 @@
 using MediaManager.Infrastructure.Persistence;
 using MediaManager.Infrastructure.Persistence.Interceptors;
 using Microsoft.EntityFrameworkCore;
+using MassTransit;
+using FluentValidation;
+using MediaManager.Infrastructure.Endpoints;
+using MediaManager.Features.UserManagement.Abstractions.Interfaces;
+using MediaManager.Features.UserManagement.Repositories;
+using MediaManager.Features.UserManagement.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
+builder.Services.AddScoped<IUserManagementValidationRepository, UserManagementValidationRepository>();
+builder.Services.AddSingleton<UserMapper>();
+
 builder.Services.AddDbContext<MediaManagerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+builder.Services.AddMediator(x =>
+{
+    x.AddConsumers(typeof(Program).Assembly);
+});
+
+builder.Services.AddMassTransit(x => 
+{
+    x.AddConsumers(typeof(Program).Assembly);
+
+    x.UsingInMemory((context, cfg) =>
+    {
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
 var app = builder.Build();
+
+// // Apply pending migrations on startup in Development
+// if (app.Environment.IsDevelopment())
+// {
+//     using var scope = app.Services.CreateScope();
+//     var dbContext = scope.ServiceProvider.GetRequiredService<MediaManagerDbContext>();
+//     dbContext.Database.Migrate();
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+app.MapEndpoints(typeof(Program).Assembly);
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

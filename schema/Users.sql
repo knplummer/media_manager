@@ -2,5 +2,9 @@ CREATE TABLE Users (
     UserId INTEGER PRIMARY KEY NOT NULL,
     Username VARCHAR(25) NOT NULL UNIQUE,
     IsActive BOOLEAN NOT NULL,
-    LastLogin TIMESTAMP NOT NULL
+    LastLogin TIMESTAMP,
+    CreatedBy INTEGER NOT NULL,
+    CreatedDate TIMESTAMP NOT NULL,
+    UpdatedBy INTEGER,
+    UpdatedDate TIMESTAMP
 );
