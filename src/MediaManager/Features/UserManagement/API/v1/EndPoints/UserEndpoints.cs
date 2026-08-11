@@ -13,9 +13,10 @@ public class CreateUserEndpoint() : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/v1/users", async (CreateUserMessage message, IRequestClient<CreateUserCommand> client, UserManagementMapper userMapper) =>
+        app.MapPost("/api/v1/users", async (CreateUserMessage message, IRequestClient<CreateUserCommand> client, UserMapper userMapper) =>
         {
-            var response = await client.GetResponse<UserCreatedResponse>(userMapper.MessageToCommand<CreateUserCommand>(message));
+            var command = userMapper.MessageToCreateCommand(message, Guid.NewGuid(), "API", DateTime.UtcNow);
+            var response = await client.GetResponse<UserCreatedResponse>(command);
             return Results.Created($"/api/v1/users/{response.Message.Username}", response.Message);
         })
         .WithTags("Users")
@@ -27,9 +28,10 @@ public class UpdateUserEndpoint() : IEndpoint
 {   
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("/api/v1/users", async (UpdateUserMessage message, IRequestClient<UpdateUserCommand> client, UserManagementMapper userMapper) =>
+        app.MapPut("/api/v1/users", async (UpdateUserMessage message, IRequestClient<UpdateUserCommand> client, UserMapper userMapper) =>
         {
-            var response = await client.GetResponse<UserUpdatedResponse>(userMapper.MessageToCommand<UpdateUserCommand>(message));
+            var command = userMapper.MessageToUpdateCommand(message, Guid.NewGuid(), "API", DateTime.UtcNow);
+            var response = await client.GetResponse<UserUpdatedResponse>(command);
             return Results.Ok(response.Message);
         })
         .WithTags("Users")

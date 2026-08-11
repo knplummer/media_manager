@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IUserManagementValidationRepository, UserManagementValidationRepository>();
-builder.Services.AddSingleton<UserManagementMapper>();
+builder.Services.AddSingleton<UserMapper>();
 
 builder.Services.AddDbContext<MediaManagerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -42,13 +42,13 @@ builder.Services.AddMassTransit(x =>
 
 var app = builder.Build();
 
-// Apply pending migrations on startup in Development
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var dbContext = scope.ServiceProvider.GetRequiredService<MediaManagerDbContext>();
-    dbContext.Database.Migrate();
-}
+// // Apply pending migrations on startup in Development
+// if (app.Environment.IsDevelopment())
+// {
+//     using var scope = app.Services.CreateScope();
+//     var dbContext = scope.ServiceProvider.GetRequiredService<MediaManagerDbContext>();
+//     dbContext.Database.Migrate();
+// }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

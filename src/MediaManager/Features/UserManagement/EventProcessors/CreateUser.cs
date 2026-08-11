@@ -12,7 +12,7 @@ namespace MediaManager.Features.UserManagement.EventProcessors;
 
 
 //Validate command against database before processing
-public class CreateUserConsumer(IUserManagementRepository userRepository, IUserManagementValidationRepository validationRepository, UserManagementMapper mapper, ILogger<CreateUserConsumer> logger) : EventConsumer<CreateUserCommand>(logger)
+public class CreateUserConsumer(IUserManagementRepository userRepository, IUserManagementValidationRepository validationRepository, UserMapper mapper, ILogger<CreateUserConsumer> logger) : EventConsumer<CreateUserCommand>(logger)
 {
     public override async Task Consume(ConsumeContext<CreateUserCommand> context)
     {
@@ -32,9 +32,8 @@ public class CreateUserConsumer(IUserManagementRepository userRepository, IUserM
 
             await userRepository.AddUserAsync(user, context.CancellationToken);
 
-            var mappedResponse = mapper.EntityToObject<UserCreatedResponse>(user);
-            var response = mappedResponse with { Id = command.Id, IsSuccess = true, Source = InternalSources.CommandProcessing, Timestamp = DateTime.UtcNow, ErrorCodes = null };
-            await context.RespondAsync(response);
+            var mappedResponse = mapper.EntityToCreatedResponse(user, command.Id, InternalSources.CommandProcessing, DateTime.UtcNow, true, null);
+            await context.RespondAsync(mappedResponse);
         }
         catch (Exception ex)
         {
